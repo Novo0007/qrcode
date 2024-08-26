@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced QR Code App</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      /* Importing font from Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap");
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background: #4c40aad4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    max-width: 500px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #333;
+}
+
+.form-group .form-label {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-size: 16px;
+    color: #333;
+    transition: 0.3s;
+    background: #fff;
+    padding: 0 5px;
+    pointer-events: none;
+}
+
+.form-group input:focus + .form-label,
+.form-group input:not(:placeholder-shown) + .form-label {
+    top: -10px;
+    left: 8px;
+    font-size: 12px;
+    color: #000;
+}
+
+.customization {
+    margin-bottom: 20px;
+}
+
+.customization label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.customization input {
+    margin-bottom: 15px;
+}
+
+.qr-code {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.qr-code img {
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    background-color: #004494;
+}
+
+.scanner-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.scanner-container video {
+    border: 1px solid #fff;
+    border-radius: 8px;
+}
+
+.scanner-container button {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff3b3b;
+    padding: 10px 20px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Generator & Scanner</h1>
+        
+        <div class="form-group">
+            <input id="qr-input" placeholder="Enter your info" type="text" aria-label="Enter your information to generate a QR code">
+            <label class="form-label" for="qr-input">Enter your info</label>
+        </div>
+        
+        <div class="customization">
+            <label for="color">QR Code Color:</label>
+            <input type="color" id="color" name="color" value="#000000">
+            
+            <label for="bgcolor">Background Color:</label>
+            <input type="color" id="bgcolor" name="bgcolor" value="#ffffff">
+            
+            <label for="size">Size:</label>
+            <input type="range" id="size" name="size" min="100" max="500" value="150">
+        </div>
+        
+        <div class="qr-code">
+            <img id="qr-img" src="" alt="QR Code">
+        </div>
+        
+        <button id="generate-btn">Generate QR Code</button>
+        <button id="download-btn">Download QR Code</button>
+        <button id="scan-btn">Scan QR Code</button>
+        
+        <div class="scanner-container" id="scanner-container">
+            <video id="preview" width="100%" height="100%"></video>
+            <button id="stop-scan">Stop Scanning</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+     <script>
+       document.getElementById("generate-btn").addEventListener("click", function() {
+    const input = document.getElementById("qr-input").value;
+    const color = document.getElementById("color").value;
+    const bgcolor = document.getElementById("bgcolor").value;
+    const size = document.getElementById("size").value;
+    const qrImg = document.getElementById("qr-img");
+
+    if (input.trim() === "") {
+        alert("Please enter some text to generate the QR code.");
+        return;
+    }
+
+    const qrCodeURL = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(input)}&color=${color.substring(1)}&bgcolor=${bgcolor.substring(1)}`;
+    qrImg.src = qrCodeURL;
+    qrImg.alt = "Generated QR Code";
+});
+
+document.getElementById("download-btn").addEventListener("click", function() {
+    const qrImg = document.getElementById("qr-img");
+    if (!qrImg.src) {
+        alert("Please generate a QR code first.");
+        return;
+    }
+
+    const link = document.createElement('a');
+    link.href = qrImg.src;
+    link.download = 'qr-code.png';
+    link.click();
+});
+
+document.getElementById("scan-btn").addEventListener("click", function() {
+    document.getElementById("scanner-container").style.display = "flex";
+    startScanner();
+});
+
+document.getElementById("stop-scan").addEventListener("click", function() {
+    document.getElementById("scanner-container").style.display = "none";
+    if (window.stream) {
+        window.stream.getTracks().forEach(track => track.stop());
+    }
+});
+
+async function startScanner() {
+    const video = document.getElementById("preview");
+    const scannerContainer = document.getElementById("scanner-container");
+
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+    video.srcObject = stream;
+    window.stream = stream;
+
+    video.addEventListener("loadedmetadata", () => {
+        video.play();
+    });
+
+    const codeReader = new ZXing.BrowserQRCodeReader();
+    codeReader.decodeFromVideoDevice(null, video, (result, error) => {
+        if (result) {
+            alert("QR Code Scanned: " + result.text);
+            scannerContainer.style.display = "none";
+            if (window.stream) {
+                window.stream.getTracks().forEach(track => track.stop());
+            }
+        }
+        if (error) {
+            console.error(error);
+        }
+    });
+}
+
+     </script>
+</body>
+</html>
