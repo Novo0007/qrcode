@@ -36,7 +36,7 @@
             align-items: center;
         }
 
-        .filter-controls select, .camera-controls button {
+        .filter-controls select, .camera-controls button, .camera-controls select {
             padding: 5px;
             margin: 5px;
         }
@@ -75,6 +75,10 @@
             background-color: #0056b3;
         }
 
+        .camera-controls select {
+            max-width: 200px;
+        }
+
         .hidden {
             display: none;
         }
@@ -106,30 +110,60 @@
         </select>
     </div>
     <div class="camera-controls">
-        <button id="cameraSelector">Switch Camera</button>
+        <label for="cameraSelector">Choose a camera:</label>
+        <select id="cameraSelector"></select>
         <button id="saveBtn">Save Photo</button>
     </div>
 
     <script>
-     document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
     const video = document.getElementById('video');
     const filterSelect = document.getElementById('filter');
     const saveBtn = document.getElementById('saveBtn');
     const cameraSelector = document.getElementById('cameraSelector');
     let currentStream;
-    let currentCamera = 0; // 0: front camera, 1: back camera
     let currentFilter = 'none'; // Default filter
 
-    // Function to access the camera
-    async function startCamera(cameraIndex = 0) {
+    // Function to list and populate available cameras
+    async function populateCameraOptions() {
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const cameras = devices.filter(device => device.kind === 'videoinput');
+
+            // Clear existing options
+            cameraSelector.innerHTML = '';
+
+            // Add a default option
+            cameraSelector.appendChild(new Option('Select Camera', ''));
+
+            // Add each camera as an option
+            cameras.forEach((camera, index) => {
+                const option = new Option(camera.label || `Camera ${index + 1}`, camera.deviceId);
+                cameraSelector.appendChild(option);
+            });
+
+            // Set up event listener for camera change
+            cameraSelector.addEventListener('change', function() {
+                const deviceId = cameraSelector.value;
+                if (deviceId) {
+                    startCamera(deviceId);
+                }
+            });
+        } catch (error) {
+            console.error('Error enumerating devices:', error);
+        }
+    }
+
+    // Function to access the camera with a specific device ID
+    async function startCamera(deviceId = null) {
         if (currentStream) {
             currentStream.getTracks().forEach(track => track.stop());
         }
         try {
             const constraints = {
                 video: {
-                    facingMode: cameraIndex === 1 ? 'environment' : 'user',
-                    width: { ideal: 1920 },  // Set high resolution for video
+                    deviceId: deviceId ? { exact: deviceId } : undefined,
+                    width: { ideal: 1920 },
                     height: { ideal: 1080 }
                 }
             };
@@ -141,8 +175,9 @@
         }
     }
 
-    // Start the default camera (usually the front camera)
-    startCamera(currentCamera);
+    // Start the default camera and populate camera options
+    await populateCameraOptions();
+    startCamera();
 
     // Apply selected filter to video
     filterSelect.addEventListener('change', function() {
@@ -170,12 +205,6 @@
         link.href = canvas.toDataURL('image/png', 1.0); // Ensure high-quality image
         link.download = 'photo.png';
         link.click();
-    });
-
-    // Switch between front and back cameras
-    cameraSelector.addEventListener('click', function() {
-        currentCamera = (currentCamera + 1) % 2;
-        startCamera(currentCamera);
     });
 });
 
