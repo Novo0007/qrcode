@@ -13,7 +13,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #ffffff00;
+            background-color: #f0f0f0;
         }
 
         h1 {
@@ -36,7 +36,6 @@
             display: block;
             border: 2px solid #ccc;
             border-radius: 8px;
-            transform: scaleX(-1); /* Mirror the video preview for a natural selfie view */
         }
 
         .controls {
@@ -142,29 +141,17 @@
             <option value="hue-rotate(15deg) brightness(130%)">Golden Hour</option>
             <option value="invert(50%) hue-rotate(90deg)">Color Shift</option>
             <option value="saturate(400%) brightness(90%)">Intense Colors</option>
-            <option value="sepia(50%) contrast(120%) brightness(90%) saturate(80%)
-">Vintage Fade</option>
-             <option value="brightness(120%) contrast(110%) saturate(130%) hue-rotate(210deg)
-">Cool Breeze</option>
-              <option value="brightness(110%) contrast(120%) saturate(150%) hue-rotate(30deg)
-">Sunset Glow</option>
-               <option value="blur(4px) brightness(90%) contrast(80%) grayscale(20%)
-">Mystic Fog</option>
-                <option value="hue-rotate(180deg) brightness(110%) contrast(130%) saturate(140%)
-">Oceanic</option>
-                 <option value="contrast(150%) brightness(80%) saturate(90%) hue-rotate(340deg)
-">Cinematic</option>
-                  <option value="hue-rotate(120deg) brightness(110%) contrast(110%) saturate(160%)
-">Emerald Glow</option>
-                   <option value="grayscale(80%) brightness(80%) contrast(130%) saturate(90%)
-">Stormy</option>
-                    <option value="hue-rotate(150deg) brightness(120%) contrast(110%) saturate(170%)
-">Tropical Vibe</option>
-                     <option value="grayscale(60%) contrast(140%) brightness(80%) saturate(100%)
-">Urban Decay</option>
-<option value="brightness(140%) contrast(140%) saturate(170%) blur(1px)
-">Crystal Clear</option>
-
+            <option value="sepia(50%) contrast(120%) brightness(90%) saturate(80%)">Vintage Fade</option>
+            <option value="brightness(120%) contrast(110%) saturate(130%) hue-rotate(210deg)">Cool Breeze</option>
+            <option value="brightness(110%) contrast(120%) saturate(150%) hue-rotate(30deg)">Sunset Glow</option>
+            <option value="blur(4px) brightness(90%) contrast(80%) grayscale(20%)">Mystic Fog</option>
+            <option value="hue-rotate(180deg) brightness(110%) contrast(130%) saturate(140%)">Oceanic</option>
+            <option value="contrast(150%) brightness(80%) saturate(90%) hue-rotate(340deg)">Cinematic</option>
+            <option value="hue-rotate(120deg) brightness(110%) contrast(110%) saturate(160%)">Emerald Glow</option>
+            <option value="grayscale(80%) brightness(80%) contrast(130%) saturate(90%)">Stormy</option>
+            <option value="hue-rotate(150deg) brightness(120%) contrast(110%) saturate(170%)">Tropical Vibe</option>
+            <option value="grayscale(60%) contrast(140%) brightness(80%) saturate(100%)">Urban Decay</option>
+            <option value="brightness(140%) contrast(140%) saturate(170%) blur(1px)">Crystal Clear</option>
         </select>
 
         <label for="cameraSelector">Choose a camera:</label>
@@ -183,6 +170,7 @@
             const cameraSelector = document.getElementById('cameraSelector');
             let currentStream;
             let currentFilter = 'none'; // Default filter
+            let isFrontCamera = false;
 
             // Function to list and populate available cameras
             async function populateCameraOptions() {
@@ -207,83 +195,96 @@
                         cameraSelector.appendChild(option);
                     });
                 } catch (error) {
-                    console.error('Error enumerating devices:', error);
-                    cameraSelector.innerHTML = '<option value="">Error accessing cameras</option>';
+                    console.error('Error camera devices:', error);
                 }
             }
 
-            // Function to access the camera with a specific device ID
-            async function startCamera(deviceId = null) {
+            // Function to start the camera
+            async function startCamera(deviceId) {
                 if (currentStream) {
+                    // Stop all video tracks if a stream is already active
                     currentStream.getTracks().forEach(track => track.stop());
                 }
+
+                const constraints = {
+                    video: {
+                        deviceId: deviceId ? { exact: deviceId } : undefined
+                    }
+                };
+
                 try {
-                    const constraints = {
-                        video: {
-                            deviceId: deviceId ? { exact: deviceId } : undefined,
-                            width: { ideal: 1280 },
-                            height: { ideal: 720 },
-                            facingMode: 'user' // Prefer front camera
-                        },
-                        audio: false
-                    };
-                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                    currentStream = stream;
-                    video.srcObject = stream;
+                    currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+                    video.srcObject = currentStream;
+
+                    // Check if the selected camera is the front camera
+                    isFrontCamera = await isFrontFacingCamera(currentStream);
+                    applyMirrorEffect();
                 } catch (error) {
                     console.error('Error accessing the camera:', error);
-                    alert('Unable to access the camera. Please check permissions and try again.');
                 }
             }
 
-            // Initialize camera options and start default camera
-            await populateCameraOptions();
-            startCamera();
+            // Function to determine if the current camera is front-facing
+            async function isFrontFacingCamera(stream) {
+                try {
+                    const track = stream.getVideoTracks()[0];
+                    const capabilities = track.getCapabilities();
 
-            // Event listener for camera selection
-            cameraSelector.addEventListener('change', function () {
-                const deviceId = cameraSelector.value;
-                startCamera(deviceId);
-            });
+                    if ('facingMode' in capabilities) {
+                        return capabilities.facingMode.includes('user');
+                    }
+                } catch (error) {
+                    console.error('Error determining camera facing mode:', error);
+                }
+                return false; // Default to false if unable to determine
+            }
+
+            // Apply the mirror effect if it's the front camera
+            function applyMirrorEffect() {
+                if (isFrontCamera) {
+                    video.style.transform = 'scaleX(-1)';
+                } else {
+                    video.style.transform = 'scaleX(1)';
+                }
+            }
 
             // Event listener for filter selection
             filterSelect.addEventListener('change', function () {
-                currentFilter = filterSelect.value;
+                currentFilter = this.value;
                 video.style.filter = currentFilter;
             });
 
-            // Function to save the current frame with applied filter and mirror effect
+            // Event listener for camera selection
+            cameraSelector.addEventListener('change', function () {
+                const deviceId = this.value;
+                startCamera(deviceId);
+            });
+
+            // Event listener for the save button
             saveBtn.addEventListener('click', function () {
-                if (!currentStream) {
-                    alert('No camera stream available to capture.');
-                    return;
-                }
-
                 const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
+                const context = canvas.getContext('2d');
 
-                // Set canvas dimensions to match video
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
 
-                // Apply the filter to the canvas context
-                ctx.filter = currentFilter;
+                if (isFrontCamera) {
+                    context.translate(canvas.width, 0);
+                    context.scale(-1, 1); // Mirror the image for front-facing camera
+                }
 
-                // Mirror the image by flipping the context horizontally
-                ctx.translate(canvas.width, 0);
-                ctx.scale(-1, 1);
+                context.filter = currentFilter;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-                // Draw the video frame onto the canvas with the filter applied
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                // Create a link to download the canvas image
                 const link = document.createElement('a');
-                link.href = canvas.toDataURL('image/png', 1.0); // Ensure high-quality image
+                link.href = canvas.toDataURL('image/png');
                 link.download = 'photo.png';
-                document.body.appendChild(link);
                 link.click();
-                document.body.removeChild(link);
             });
+
+            // Populate camera options and start the default camera
+            await populateCameraOptions();
+            startCamera();
         });
     </script>
 </body>
