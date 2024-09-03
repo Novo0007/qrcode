@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera with Advanced Filters</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff00;
+        }
+
+        h1 {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        #cameraContainer {
+            position: relative;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 640px;
+            display: flex;
+            justify-content: center;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            transform: scaleX(-1); /* Mirror the video preview for a natural selfie view */
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 640px;
+        }
+
+        .controls label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        select, button {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 4px;
+            border: none;
+            font-size: 16px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        select {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        select:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            select, button {
+                width: 90%;
+                max-width: 300px;
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Camera with Advanced Filters</h1>
+    <div id="cameraContainer">
+        <video id="video" autoplay playsinline></video>
+    </div>
+    <div class="controls">
+        <label for="filter">Choose a filter:</label>
+        <select id="filter">
+            <option value="none">None</option>
+            <option value="grayscale(100%)">Grayscale</option>
+            <option value="sepia(100%)">Sepia</option>
+            <option value="invert(100%)">Invert</option>
+            <option value="brightness(150%)">Brightness</option>
+            <option value="contrast(150%)">Contrast</option>
+            <option value="blur(5px)">Blur</option>
+            <option value="saturate(200%)">Saturate</option>
+            <option value="hue-rotate(90deg)">Hue Rotate</option>
+            <option value="opacity(50%)">Opacity</option>
+            <option value="drop-shadow(10px 10px 5px rgba(0,0,0,0.5))">Drop Shadow</option>
+            <option value="sepia(100%) saturate(300%)">Retro</option>
+            <option value="contrast(200%) brightness(200%) sepia(50%)">Neon</option>
+            <option value="grayscale(100%) contrast(200%)">B&W High Contrast</option>
+            <option value="invert(100%) hue-rotate(180deg)">Negative</option>
+            <option value="blur(3px) saturate(250%) sepia(50%)">Dreamy</option>
+            <option value="contrast(180%) saturate(120%) hue-rotate(45deg)">Warm Glow</option>
+            <option value="brightness(200%) contrast(150%) saturate(250%)">Vibrant</option>
+            <!-- Additional Filters -->
+            <option value="brightness(120%) contrast(130%) hue-rotate(30deg)">Sunset</option>
+            <option value="grayscale(50%) sepia(30%) saturate(200%)">Warm Vintage</option>
+            <option value="hue-rotate(45deg) saturate(150%) brightness(120%)">Cool Tone</option>
+            <option value="blur(10px) contrast(200%) brightness(150%)">Dreamy Blur</option>
+            <option value="brightness(180%) saturate(300%)">Bright & Bold</option>
+            <option value="contrast(250%)">Ultra Contrast</option>
+            <option value="sepia(70%) contrast(120%)">Old Film</option>
+            <option value="hue-rotate(270deg) invert(50%)">Psychedelic</option>
+            <option value="saturate(300%) hue-rotate(60deg)">Pop Art</option>
+            <option value="brightness(100%) contrast(100%) saturate(100%)">Natural</option>
+            <option value="hue-rotate(120deg) saturate(180%)">Green Tint</option>
+            <option value="brightness(90%) contrast(160%)">Moody</option>
+            <option value="sepia(40%) hue-rotate(30deg)">Autumn</option>
+            <option value="grayscale(80%) brightness(110%)">Muted</option>
+            <option value="contrast(120%) saturate(220%)">Lively</option>
+            <option value="hue-rotate(15deg) brightness(130%)">Golden Hour</option>
+            <option value="invert(50%) hue-rotate(90deg)">Color Shift</option>
+            <option value="saturate(400%) brightness(90%)">Intense Colors</option>
+            <option value="sepia(50%) contrast(120%) brightness(90%) saturate(80%)
+">Vintage Fade</option>
+             <option value="brightness(120%) contrast(110%) saturate(130%) hue-rotate(210deg)
+">Cool Breeze</option>
+              <option value="brightness(110%) contrast(120%) saturate(150%) hue-rotate(30deg)
+">Sunset Glow</option>
+               <option value="blur(4px) brightness(90%) contrast(80%) grayscale(20%)
+">Mystic Fog</option>
+                <option value="hue-rotate(180deg) brightness(110%) contrast(130%) saturate(140%)
+">Oceanic</option>
+                 <option value="contrast(150%) brightness(80%) saturate(90%) hue-rotate(340deg)
+">Cinematic</option>
+                  <option value="hue-rotate(120deg) brightness(110%) contrast(110%) saturate(160%)
+">Emerald Glow</option>
+                   <option value="grayscale(80%) brightness(80%) contrast(130%) saturate(90%)
+">Stormy</option>
+                    <option value="hue-rotate(150deg) brightness(120%) contrast(110%) saturate(170%)
+">Tropical Vibe</option>
+                     <option value="grayscale(60%) contrast(140%) brightness(80%) saturate(100%)
+">Urban Decay</option>
+<option value="brightness(140%) contrast(140%) saturate(170%) blur(1px)
+">Crystal Clear</option>
+
+        </select>
+
+        <label for="cameraSelector">Choose a camera:</label>
+        <select id="cameraSelector">
+            <option value="">Loading cameras...</option>
+        </select>
+
+        <button id="saveBtn">Save Photo</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const video = document.getElementById('video');
+            const filterSelect = document.getElementById('filter');
+            const saveBtn = document.getElementById('saveBtn');
+            const cameraSelector = document.getElementById('cameraSelector');
+            let currentStream;
+            let currentFilter = 'none'; // Default filter
+
+            // Function to list and populate available cameras
+            async function populateCameraOptions() {
+                try {
+                    const devices = await navigator.mediaDevices.enumerateDevices();
+                    const cameras = devices.filter(device => device.kind === 'videoinput');
+
+                    // Clear existing options
+                    cameraSelector.innerHTML = '';
+
+                    if (cameras.length === 0) {
+                        cameraSelector.appendChild(new Option('No cameras found', ''));
+                        return;
+                    }
+
+                    // Add a default option
+                    cameraSelector.appendChild(new Option('Default Camera', ''));
+
+                    // Add each camera as an option
+                    cameras.forEach((camera, index) => {
+                        const option = new Option(camera.label || `Camera ${index + 1}`, camera.deviceId);
+                        cameraSelector.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error('Error enumerating devices:', error);
+                    cameraSelector.innerHTML = '<option value="">Error accessing cameras</option>';
+                }
+            }
+
+            // Function to access the camera with a specific device ID
+            async function startCamera(deviceId = null) {
+                if (currentStream) {
+                    currentStream.getTracks().forEach(track => track.stop());
+                }
+                try {
+                    const constraints = {
+                        video: {
+                            deviceId: deviceId ? { exact: deviceId } : undefined,
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 },
+                            facingMode: 'user' // Prefer front camera
+                        },
+                        audio: false
+                    };
+                    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    currentStream = stream;
+                    video.srcObject = stream;
+                } catch (error) {
+                    console.error('Error accessing the camera:', error);
+                    alert('Unable to access the camera. Please check permissions and try again.');
+                }
+            }
+
+            // Initialize camera options and start default camera
+            await populateCameraOptions();
+            startCamera();
+
+            // Event listener for camera selection
+            cameraSelector.addEventListener('change', function () {
+                const deviceId = cameraSelector.value;
+                startCamera(deviceId);
+            });
+
+            // Event listener for filter selection
+            filterSelect.addEventListener('change', function () {
+                currentFilter = filterSelect.value;
+                video.style.filter = currentFilter;
+            });
+
+            // Function to save the current frame with applied filter and mirror effect
+            saveBtn.addEventListener('click', function () {
+                if (!currentStream) {
+                    alert('No camera stream available to capture.');
+                    return;
+                }
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                // Set canvas dimensions to match video
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
+                // Apply the filter to the canvas context
+                ctx.filter = currentFilter;
+
+                // Mirror the image by flipping the context horizontally
+                ctx.translate(canvas.width, 0);
+                ctx.scale(-1, 1);
+
+                // Draw the video frame onto the canvas with the filter applied
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Create a link to download the canvas image
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png', 1.0); // Ensure high-quality image
+                link.download = 'photo.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+    </script>
+</body>
+
+</html>
