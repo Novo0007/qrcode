@@ -240,7 +240,7 @@
                 }
             }
 
-            // Function to start the camera with high resolution
+            // Function to start the camera with balanced resolution
             async function startCamera(deviceId) {
                 if (currentStream) {
                     // Stop all video tracks if a stream is already active
@@ -251,8 +251,8 @@
                     video: {
                         deviceId: deviceId ? { exact: deviceId } : undefined,
                         facingMode: isFrontCamera ? 'user' : 'environment',
-                        width: { ideal: 3840 }, // Request highest resolution available
-                        height: { ideal: 2160 }
+                        width: { ideal: 1280 }, // Moderate resolution
+                        height: { ideal: 720 }
                     }
                 };
 
@@ -327,8 +327,8 @@
                 const context = canvas.getContext('2d');
 
                 // Set canvas dimensions to match video dimensions
-                canvas.width = video.videoWidth || 3840;
-                canvas.height = video.videoHeight || 2160;
+                canvas.width = video.videoWidth || 1280; // Adjust default width
+                canvas.height = video.videoHeight || 720; // Adjust default height
 
                 if (isFrontCamera) {
                     context.translate(canvas.width, 0);
