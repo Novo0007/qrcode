@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera with High-Resolution Capture</title>
+    <title>Camera with Advanced Filters</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,6 +86,21 @@
             background-color: #0056b3;
         }
 
+        #emojiContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allow clicking through */
+        }
+
+        .emoji {
+            position: absolute;
+            font-size: 3rem;
+            pointer-events: none;
+        }
+
         @media (max-width: 768px) {
             select,
             button {
@@ -99,14 +114,15 @@
 </head>
 
 <body>
-    <h1>Camera with High-Resolution Capture</h1>
+    <h1>Camera with Advanced Filters</h1>
     <div id="cameraContainer">
         <video id="video" autoplay playsinline></video>
+        <div id="emojiContainer"></div>
     </div>
     <div class="controls">
         <label for="filter">Choose a filter:</label>
         <select id="filter">
-            <option value="none">None</option>
+          <option value="none">None</option>
             <option value="grayscale(100%)">Grayscale</option>
             <option value="sepia(100%)">Sepia</option>
             <option value="invert(100%)">Invert</option>
@@ -154,6 +170,23 @@
             <option value="hue-rotate(150deg) brightness(120%) contrast(110%) saturate(170%)">Tropical Vibe</option>
             <option value="grayscale(60%) contrast(140%) brightness(80%) saturate(100%)">Urban Decay</option>
             <option value="brightness(140%) contrast(140%) saturate(170%) blur(1px)">Crystal Clear</option>
+            
+            <!-- Instagram-like Filters -->
+            <option value="grayscale(100%) contrast(150%)">Instagram B&W</option>
+            <option value="sepia(60%) brightness(120%)">Instagram Sepia</option>
+            <option value="contrast(150%) brightness(130%) saturate(140%)">Instagram Vibrant</option>
+            <option value="hue-rotate(45deg) saturate(150%)">Instagram Cool</option>
+            <option value="brightness(140%) contrast(120%) saturate(180%)">Instagram Warm</option>
+        </select>
+
+        <label for="emojiSelect">Choose an emoji:</label>
+        <select id="emojiSelect">
+            <option value="">None</option>
+            <option value="😀">😀 Happy</option>
+            <option value="😍">😍 Love</option>
+            <option value="😎">😎 Cool</option>
+            <option value="😜">😜 Playful</option>
+            <option value="🤔">🤔 Thinking</option>
         </select>
 
         <label for="cameraSelector">Choose a camera:</label>
@@ -168,10 +201,13 @@
         document.addEventListener('DOMContentLoaded', async function () {
             const video = document.getElementById('video');
             const filterSelect = document.getElementById('filter');
+            const emojiSelect = document.getElementById('emojiSelect');
             const saveBtn = document.getElementById('saveBtn');
             const cameraSelector = document.getElementById('cameraSelector');
+            const emojiContainer = document.getElementById('emojiContainer');
             let currentStream;
             let currentFilter = 'none'; // Default filter
+            let currentEmoji = '';
             let isFrontCamera = false;
 
             // Function to list and populate available cameras
@@ -259,6 +295,26 @@
                 video.style.filter = currentFilter;
             });
 
+            // Event listener for emoji selection
+            emojiSelect.addEventListener('change', function () {
+                currentEmoji = this.value;
+                updateEmojiOverlay();
+            });
+
+            // Function to update emoji overlay
+            function updateEmojiOverlay() {
+                emojiContainer.innerHTML = ''; // Clear previous emojis
+                if (currentEmoji) {
+                    const emoji = document.createElement('div');
+                    emoji.className = 'emoji';
+                    emoji.textContent = currentEmoji;
+                    emoji.style.left = '50%'; // Center horizontally
+                    emoji.style.top = '50%'; // Center vertically
+                    emoji.style.transform = 'translate(-50%, -50%)'; // Center the emoji
+                    emojiContainer.appendChild(emoji);
+                }
+            }
+
             // Event listener for camera selection
             cameraSelector.addEventListener('change', function () {
                 const deviceId = this.value;
@@ -281,6 +337,15 @@
 
                 context.filter = currentFilter;
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Draw emoji on top of the image
+                if (currentEmoji) {
+                    const emojiSize = 100; // Adjust emoji size
+                    context.font = `${emojiSize}px Arial`;
+                    context.textAlign = 'center';
+                    context.textBaseline = 'middle';
+                    context.fillText(currentEmoji, canvas.width / 2, canvas.height / 2);
+                }
 
                 const link = document.createElement('a');
                 link.href = canvas.toDataURL('image/png');
