@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera with Advanced Filters</title>
+    <title>Camera with High-Resolution Capture</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,7 +53,8 @@
             color: #333;
         }
 
-        select, button {
+        select,
+        button {
             padding: 10px;
             margin: 5px;
             border-radius: 4px;
@@ -86,7 +87,8 @@
         }
 
         @media (max-width: 768px) {
-            select, button {
+            select,
+            button {
                 width: 90%;
                 max-width: 300px;
                 padding: 8px;
@@ -97,7 +99,7 @@
 </head>
 
 <body>
-    <h1>Camera with Advanced Filters</h1>
+    <h1>Camera with High-Resolution Capture</h1>
     <div id="cameraContainer">
         <video id="video" autoplay playsinline></video>
     </div>
@@ -194,12 +196,15 @@
                         const option = new Option(camera.label || `Camera ${index + 1}`, camera.deviceId);
                         cameraSelector.appendChild(option);
                     });
+
+                    // Start the default camera
+                    startCamera();
                 } catch (error) {
-                    console.error('Error camera devices:', error);
+                    console.error('Error listing cameras:', error);
                 }
             }
 
-            // Function to start the camera
+            // Function to start the camera with high resolution
             async function startCamera(deviceId) {
                 if (currentStream) {
                     // Stop all video tracks if a stream is already active
@@ -208,17 +213,17 @@
 
                 const constraints = {
                     video: {
-                        deviceId: deviceId ? { exact: deviceId } : undefined
+                        deviceId: deviceId ? { exact: deviceId } : undefined,
+                        facingMode: isFrontCamera ? 'user' : 'environment',
+                        width: { ideal: 3840 }, // Request highest resolution available
+                        height: { ideal: 2160 }
                     }
                 };
 
                 try {
                     currentStream = await navigator.mediaDevices.getUserMedia(constraints);
                     video.srcObject = currentStream;
-
-                    // Check if the selected camera is the front camera
-                    isFrontCamera = await isFrontFacingCamera(currentStream);
-                    applyMirrorEffect();
+                    video.play();
                 } catch (error) {
                     console.error('Error accessing the camera:', error);
                 }
@@ -265,8 +270,9 @@
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
 
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
+                // Set canvas dimensions to match video dimensions
+                canvas.width = video.videoWidth || 3840;
+                canvas.height = video.videoHeight || 2160;
 
                 if (isFrontCamera) {
                     context.translate(canvas.width, 0);
@@ -284,7 +290,6 @@
 
             // Populate camera options and start the default camera
             await populateCameraOptions();
-            startCamera();
         });
     </script>
 </body>
