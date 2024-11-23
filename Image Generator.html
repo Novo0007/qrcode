@@ -4,150 +4,121 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Generator :)</title>
+  <title>Image Generator</title>
   <style>
-    /* Keep existing styles */
-    @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@500&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
     * {
-      font-family: "Nunito", Arial, sans-serif;
-      color: black;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", Arial, sans-serif;
     }
 
     body {
-      margin: 0;
-      padding: 0;
-      background-color: black;
+      background-color: #1e1e2f;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
     }
 
     header {
-      min-width: 40%;
-      max-width: 60%;
-      margin: 0rem auto;
-      background-color: #333;
+      width: 100%;
+      padding: 1rem 0;
+      background: linear-gradient(90deg, #0074d9, #00aaff);
       text-align: center;
-      padding: 0.5rem;
-      border-radius: 0px 0px 20px 20px;
-      box-shadow: 0 0 80px rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: 600;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
     main {
-      min-width: 40%;
-      max-width: 60%;
+      max-width: 600px;
+      width: 90%;
+      background-color: #282a36;
       margin: 2rem auto;
-      padding: 0.5rem;
-      background-color: #333;
-      border-radius: 20px;
-      box-shadow: 0 0 80px rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
     }
 
-    .generator {
+    .input-container {
+      margin-bottom: 1.5rem;
+    }
+
+    .input-container input {
+      width: calc(100% - 1rem);
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 1rem;
+      background-color: #44475a;
+      color: #fff;
+    }
+
+    .button-container {
       text-align: center;
-    }
-
-    .input {
-      margin-bottom: 1rem;
-    }
-
-    .promptBox {
-      width: 100%;
-      padding: 0.5rem;
-      border-style: none;
-      border-radius: 20px;
-    }
-
-    .heightWidth {
-      width: 40%;
-      padding: 0.5rem;
-      border-style: none;
-      margin-bottom: 1rem;
-    }
-
-    #hInput {
-      border-radius: 20px 4px 4px 20px;
-    }
-
-    #wInput {
-      border-radius: 4px 20px 20px 4px;
+      margin-top: 1.5rem;
     }
 
     button {
       background-color: #0074d9;
       color: white;
-      padding: 0.5rem 1rem;
+      padding: 0.8rem 1.5rem;
       border: none;
       cursor: pointer;
       border-radius: 8px;
-      box-shadow: 0 0 80px rgba(0, 116, 217, 0.4);
+      font-size: 1rem;
+      transition: background 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 116, 217, 0.3);
     }
 
-    #dlButton, #openInNewWindow {
-      background-color: #0074d9;
-      color: white;
-      padding: 0.5rem 1rem;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 0 80px rgba(0, 116, 217, 0.4);
-      border-radius: 20px;
-      display: none;
-      text-decoration: none;
-      margin: 10px;
+    button:hover {
+      background-color: #005bb5;
     }
 
-    #generate {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      height: 40px;
-      width: 80%;
-      background-color: #0074d9;
-      color: white;
-      padding: 0.5rem 1rem;
-      border: none;
-      cursor: pointer;
-      border-radius: 8px;
-      box-shadow: 0 0 80px rgba(0, 116, 217, 0.5);
-      transition: opacity 0.333s;
-    }
-
-    #generate.hide {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .output {
+    .output-container {
       text-align: center;
+      margin-top: 2rem;
     }
 
-    #image-container img {
+    .output-container img {
       max-width: 100%;
-      height: auto;
+      border-radius: 8px;
       margin-top: 1rem;
-      border-radius: 20px;
-    }
-
-    .discreteLink {
-      color: whitesmoke;
-      text-decoration: underline;
-      text-decoration-style: dotted;
-      text-decoration-color: #0074d9;
-    }
-
-    #generatedText {
-      display: none;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     }
 
     .loader {
-      border: 6px solid black;
-      border-top: 6px solid white;
+      border: 6px solid #44475a;
+      border-top: 6px solid #0074d9;
       border-radius: 50%;
       width: 50px;
       height: 50px;
       animation: spin 1s linear infinite;
-      margin: 0 auto;
-      margin-top: 1rem;
+      margin: 1.5rem auto;
       display: none;
+    }
+
+    a {
+      display: inline-block;
+      background-color: #44475a;
+      color: #f0f0f0;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin: 0.5rem;
+      transition: background 0.3s ease;
+    }
+
+    a:hover {
+      background-color: #5b5e73;
     }
 
     @keyframes spin {
@@ -163,36 +134,29 @@
 </head>
 
 <body>
+  <header>AI Image Generator ❤️</header>
+
   <main>
-    <div class="generator">
-      <div class="input">
-        <br>
-        <input class="promptBox" type="text" id="prompt" placeholder="Enter your img name here">
-      </div>
-      <div>
-        <input class="heightWidth" type="text" id="hInput" placeholder="Height">
-        <input class="heightWidth" type="text" id="wInput" placeholder="Width">
-      </div>
-      <br>
+    <div class="input-container">
+      <input id="prompt" type="text" placeholder="Enter your image description" />
+      <input id="hInput" type="number" placeholder="Height (e.g., 360)" />
+      <input id="wInput" type="number" placeholder="Width (e.g., 480)" />
     </div>
-    <div>
+    <div class="button-container">
       <button id="generate">Generate Image</button>
     </div>
-    <div class="output">
-      <h2 id="generatedText">Generated Image:</h2>
-      <div id="loading-spinner" class="loader"></div>
+    <div class="output-container">
+      <div class="loader" id="loading-spinner"></div>
+      <h2 id="generatedText" style="display: none;">Generated Image:</h2>
       <div id="image-container"></div>
       <div id="utilities">
-
-
-        
-        <a id="openInNewWindow" href="" target="_blank">Open in New Window</a>
+        <a id="openInNewWindow" href="" target="_blank" style="display: none;">Open in New Window</a>
       </div>
     </div>
   </main>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       const generateButton = document.getElementById("generate");
       const promptInput = document.getElementById("prompt");
       const heightInput = document.getElementById("hInput");
@@ -200,39 +164,38 @@
       const imageContainer = document.getElementById("image-container");
       const loadingSpinner = document.getElementById("loading-spinner");
       const genText = document.getElementById("generatedText");
-      const dlButton = document.getElementById("dlButton");
       const openWindowButton = document.getElementById("openInNewWindow");
 
-      generateButton.addEventListener("click", function() {
-        var description = promptInput.value ?
-          encodeURIComponent(promptInput.value) :
-          "beautiful%20landscape";
+      generateButton.addEventListener("click", function () {
+        const description = promptInput.value ? encodeURIComponent(promptInput.value) : "abstract art";
         const randomSeed = Math.floor(Math.random() * 1000000000);
-        const heightA = heightInput.value ? parseInt(heightInput.value) : 360;
-        const widthA = widthInput.value ? parseInt(widthInput.value) : 480;
+        const height = heightInput.value || 360;
+        const width = widthInput.value || 480;
+
         loadingSpinner.style.display = "block";
         genText.style.display = "none";
-        generateButton.classList.add("hide");
+        generateButton.disabled = true;
 
-        const imageUrl = `https://image.pollinations.ai/prompt/${description}?nologo=1&seed=${randomSeed}&height=${heightA}&width=${widthA}`;
-        
+        const imageUrl = `https://image.pollinations.ai/prompt/${description}?nologo=1&seed=${randomSeed}&height=${height}&width=${width}`;
+
         const image = document.createElement("img");
-        image.onload = function() {
+        image.onload = function () {
           loadingSpinner.style.display = "none";
           genText.style.display = "block";
-          dlButton.setAttribute("href", imageUrl);
-          dlButton.style.display = "block";
-          openWindowButton.setAttribute("href", imageUrl);
-          openWindowButton.style.display = "block";
-          generateButton.classList.remove("hide");
+          openWindowButton.style.display = "inline-block";
+          openWindowButton.href = imageUrl;
+
           imageContainer.innerHTML = "";
           imageContainer.appendChild(image);
+          generateButton.disabled = false;
         };
-        image.onerror = function() {
+
+        image.onerror = function () {
           loadingSpinner.style.display = "none";
-          alert("Failed to load image. Please try again.");
-          generateButton.classList.remove("hide");
+          alert("Image generation failed. Please try again.");
+          generateButton.disabled = false;
         };
+
         image.src = imageUrl;
       });
     });
