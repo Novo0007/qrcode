@@ -169,8 +169,8 @@
       generateButton.addEventListener("click", function () {
         const description = promptInput.value ? encodeURIComponent(promptInput.value) : "abstract art";
         const randomSeed = Math.floor(Math.random() * 1000000000);
-        const height = heightInput.value || 360;
-        const width = widthInput.value || 480;
+        const height = heightInput.value || 512;
+        const width = widthInput.value || 512;
 
         loadingSpinner.style.display = "block";
         genText.style.display = "none";
