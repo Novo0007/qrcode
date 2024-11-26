@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Image Converter</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom, #5a00ff, #120054);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Container */
+.container {
+  text-align: center;
+  background: #1d003a;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 90%;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #e0afff;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #c7a8e2;
+  margin-bottom: 20px;
+}
+
+/* Input Group */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+input, select {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  background: #260050;
+  color: #fff;
+  outline: none;
+}
+
+select {
+  cursor: pointer;
+}
+
+/* Buttons */
+button {
+  background: #900dff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: #e600ff;
+  transform: scale(1.05);
+}
+
+/* Download Link */
+a {
+  display: block;
+  margin-top: 15px;
+  text-decoration: none;
+  font-size: 1rem;
+  color: #e0afff;
+  background: #260050;
+  padding: 10px 15px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  background: #900dff;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+  margin-top: 30px;
+  font-size: 0.8rem;
+  color: #c7a8e2;
+  text-align: center;
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌌 Panda Image Converter</h1>
+    <p class="subtitle">Convert your images effortlessly with style!</p>
+    <div class="input-group">
+      <input type="file" id="imageInput" accept="image/*">
+      <select id="formatSelect">
+        <option value="png">PNG</option>
+        <option value="jpeg">JPG</option>
+        <option value="webp">WEBP</option>
+      </select>
+    </div>
+    <button id="convertBtn">Convert Image</button>
+    <a id="downloadLink" style="display: none;" download="converted-image">Download Converted Image</a>
+  </div>
+  <footer>
+    <p>✨ Powered by JavaScript | FROM NNC ✨</p>
+  </footer>
+  <script >
+    const imageInput = document.getElementById('imageInput');
+const formatSelect = document.getElementById('formatSelect');
+const convertBtn = document.getElementById('convertBtn');
+const downloadLink = document.getElementById('downloadLink');
+
+convertBtn.addEventListener('click', () => {
+  const file = imageInput.files[0];
+  if (!file) {
+    alert('Please upload an image first.');
+    return;
+  }
+
+  const format = formatSelect.value;
+  const reader = new FileReader();
+
+  reader.onload = function (event) {
+    const img = new Image();
+    img.src = event.target.result;
+
+    img.onload = function () {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      const convertedDataURL = canvas.toDataURL(`image/${format}`);
+      downloadLink.href = convertedDataURL;
+      downloadLink.download = `converted-image.${format}`;
+      downloadLink.style.display = 'inline';
+      downloadLink.textContent = 'Download Converted Image';
+    };
+  };
+
+  reader.readAsDataURL(file);
+});
+
+  </script>
+</body>
+</html>
