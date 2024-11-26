@@ -199,6 +199,12 @@
           alert("Image generation failed. Please try again.");
           generateButton.disabled = false;
         };
+         // Placeholder image before the full-size image loads
+        const previewImage = document.createElement("img");
+        previewImage.src = `https://i.pinimg.com/originals/ba/a5/e3/baa5e3935ec0f3954c870670295c2b7e.gif`;
+        previewImage.alt = "Preview Image";
+        imageContainer.innerHTML = "";
+        imageContainer.appendChild(previewImage);
 
         image.src = imageUrl;
       });
