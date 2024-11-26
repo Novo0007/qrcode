@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image Generator</title>
-  <style>
+ <style>
     @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
     * {
@@ -16,70 +16,67 @@
     }
 
     body {
-      background-color: #1e1e2f;
-      color: #f0f0f0;
+      background: linear-gradient(135deg, #6a0dad, #8e2de2);
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       min-height: 100vh;
+      color: #fff;
     }
 
     header {
-      width: 100%;
-      padding: 1rem 0;
-      background: linear-gradient(90deg, #0074d9, #00aaff);
       text-align: center;
-      color: #fff;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: 600;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      margin-bottom: 2rem;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
     }
 
     main {
-      max-width: 600px;
-      width: 90%;
-      background-color: #282a36;
-      margin: 2rem auto;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .input-container {
-      margin-bottom: 1.5rem;
+      width: 90%;
+      max-width: 600px;
     }
 
     .input-container input {
-      width: calc(100% - 1rem);
+      width: 100%;
       padding: 0.8rem;
-      margin: 0.5rem 0;
+      margin-bottom: 1rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       outline: none;
       font-size: 1rem;
-      background-color: #44475a;
+      background-color: rgba(255, 255, 255, 0.2);
       color: #fff;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
     }
 
     .button-container {
       text-align: center;
-      margin-top: 1.5rem;
     }
 
     button {
-      background-color: #0074d9;
-      color: white;
+      background-color: rgba(106, 13, 173, 0.8);
+      color: #fff;
       padding: 0.8rem 1.5rem;
       border: none;
-      cursor: pointer;
-      border-radius: 8px;
+      border-radius: 12px;
       font-size: 1rem;
-      transition: background 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0, 116, 217, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(106, 13, 173, 0.3);
     }
 
     button:hover {
-      background-color: #005bb5;
+      background-color: rgba(122, 30, 214, 0.9);
     }
 
     .output-container {
@@ -89,14 +86,14 @@
 
     .output-container img {
       max-width: 100%;
-      border-radius: 8px;
+      border-radius: 12px;
       margin-top: 1rem;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     }
 
     .loader {
-      border: 6px solid #44475a;
-      border-top: 6px solid #0074d9;
+      border: 6px solid rgba(255, 255, 255, 0.2);
+      border-top: 6px solid #6a0dad;
       border-radius: 50%;
       width: 50px;
       height: 50px;
@@ -107,30 +104,38 @@
 
     a {
       display: inline-block;
-      background-color: #44475a;
-      color: #f0f0f0;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
       padding: 0.8rem 1.5rem;
       text-decoration: none;
-      border-radius: 8px;
+      border-radius: 12px;
       font-size: 1rem;
       margin: 0.5rem;
-      transition: background 0.3s ease;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
     }
 
     a:hover {
-      background-color: #5b5e73;
+      background-color: rgba(255, 255, 255, 0.3);
     }
 
     @keyframes spin {
       0% {
         transform: rotate(0deg);
       }
-
       100% {
         transform: rotate(360deg);
       }
     }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #e0c8f9;
+      text-align: center;
+    }
   </style>
+  
 </head>
 
 <body>
@@ -200,7 +205,9 @@
       });
     });
   </script>
-  <h1>FROM NNC 🥺</h1>
+  <footer>
+    <p>✨ Powered by JavaScript | FROM NNC ✨</p>
+  </footer>
 </body>
 
 </html>
