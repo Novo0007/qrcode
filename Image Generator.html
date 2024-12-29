@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image Generator</title>
   <style>
-     @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
     * {
       margin: 0;
@@ -28,15 +30,15 @@
 
     header {
       text-align: center;
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    text-shadow: 0px 5px 20px rgb(178 100 255);
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      text-shadow: 0px 5px 20px rgb(178 100 255);
       color: #b682fa;
     }
 
     main {
-      background: rgba(32, 0, 55,0%);
+      background: rgba(32, 0, 55, 0%);
       border-radius: 20px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
       backdrop-filter: blur(10px);
@@ -48,39 +50,39 @@
     }
 
     .input-container textarea {
-  width: 100%;
-  padding: 1rem; /* Add more padding for a bigger box */
-  margin-bottom: 1rem;
-  border: none;
-  border-radius: 12px;
-  outline: none;
-  font-size: 1rem;
-  background-color: rgba(0, 0, 0, 20%);
-  color: #fff;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  resize: vertical; /* Allow vertical resizing */
-  min-height: 150px; /* Minimum height for the box */
-  max-height: 300px; /* Maximum height before scrolling */
-  overflow-y: auto; /* Enable vertical scrolling */
-  box-sizing: border-box;
-}
+      width: 100%;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 12px;
+      outline: none;
+      font-size: 1rem;
+      background-color: rgba(0, 0, 0, 20%);
+      color: #fff;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      resize: vertical;
+      min-height: 150px;
+      max-height: 300px;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
 
     .button-container {
       text-align: center;
     }
 
     button {
-    background-color: rgb(106 13 173 / 0%);
-    color: #c190ff;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 12px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 10px -1px 15px 0px rgb(3 21 255 / 41%);
-}
+      background-color: rgb(106 13 173 / 0%);
+      color: #c190ff;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 10px -1px 15px 0px rgb(3 21 255 / 41%);
+    }
 
     button:hover {
       background-color: rgba(122, 30, 214, 0.9);
@@ -99,15 +101,41 @@
     }
 
     .loader {
-     border-top: 6px solid #6a0dad;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-    margin: 1.5rem auto;
-    display: none
+  width: 50px;
+  height: 50px;
+  border: 8px solid transparent;
+  border-radius: 50%;
+  border-top: 8px solid #6a0dad;
+  border-bottom: 8px solid #6a0dad;
+  animation: spin 1s linear infinite, colorChange 1.5s ease-in-out infinite;
+  margin: 1.5rem auto;
+  display: none;
+}
 
-    }
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes colorChange {
+  0% {
+    border-top: 8px solid #6a0dad;
+    border-bottom: 8px solid #6a0dad;
+  }
+  50% {
+    border-top: 8px solid #ff3366;
+    border-bottom: 8px solid #ff3366;
+  }
+  100% {
+    border-top: 8px solid #6a0dad;
+    border-bottom: 8px solid #6a0dad;
+  }
+}
+
 
     a {
       display: inline-block;
@@ -130,6 +158,7 @@
       0% {
         transform: rotate(0deg);
       }
+
       100% {
         transform: rotate(360deg);
       }
@@ -141,23 +170,22 @@
       color: #c183ff;
       text-align: center;
     }
+
     .input-container input {
-  width: 48%; /* Make them smaller to sit side by side */
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border: none;
-  border-radius: 12px;
-  outline: none;
-  font-size: .7rem;
-  background-color: rgba(0, 0, 0, 20%);
-  color: #fff;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  transition: all 0.3s ease; /* Smooth transition for focus and hover effects */
-  box-sizing: border-box;
-}
-
-
+      width: 48%;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 12px;
+      outline: none;
+      font-size: .7rem;
+      background-color: rgba(0, 0, 0, 20%);
+      color: #fff;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
   </style>
 </head>
 
@@ -170,20 +198,26 @@
 
       <input id="hInput" type="number" placeholder="Height (e.g., 360)" />
       <input id="wInput" type="number" placeholder="Width (e.g., 480)" />
+      <button id="voiceInput">🎤 Voice Input</button>
+       <button id="surpriseMe">Random 🎲</button>
+       <button id="generate">Create Image ✨️</button>
     </div>
     <div class="button-container">
-      <button id="generate">Generate Image ✨️</button>
-      <button id="surpriseMe">Surprise Me! 🎉</button>
+       
+     
     </div>
     <div class="output-container">
       <div class="loader" id="loading-spinner"></div>
       <h2 id="generatedText" style="display: none;">Generated Image:</h2>
       <div id="image-container"></div>
       <div id="utilities">
-        <a id="downloadImage" href="" download="generated-image.png" style="display: none;">Download✨️</a>
+        <a id="downloadImage" href="" download="generated-image.png" style="display: none;">Tap to Download  ✨️</a>
       </div>
     </div>
   </main>
+  <footer>
+    <p>✨ Powered by JavaScript | FROM NNC ✨</p>
+  </footer>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -196,8 +230,9 @@
       const loadingSpinner = document.getElementById("loading-spinner");
       const genText = document.getElementById("generatedText");
       const downloadButton = document.getElementById("downloadImage");
+      const voiceInputButton = document.getElementById("voiceInput");
 
-const randomDescriptions = [
+     const randomDescriptions = [
     "A serene mountain landscape at sunrise",
     "A futuristic city with neon lights",
     "A mystical forest with glowing plants",
@@ -468,9 +503,52 @@ const randomDescriptions = [
     "A time traveler watching an alien invasion unfold",
     "A glowing crystal cavern filled with strange lifeforms",
     "A futuristic city with glowing skyscrapers and flying vehicles"
+   
 ];
+ // Web Speech API: Speech Recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.lang = "en-US"; // Default language, change as needed
+      recognition.interimResults = false;
 
+      voiceInputButton.addEventListener("click", () => {
+        recognition.start();
+      });
 
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        promptInput.value = transcript;
+        alert("Speech recognized: " + transcript);
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        alert("Sorry, I couldn't recognize your speech. Please try again.");
+      };
+    } else {
+      voiceInputButton.disabled = true;
+      alert("Your browser does not support voice recognition.");
+    }
+      // Function to add watermark
+      function addWatermarkToImage(image, width, height) {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = width;
+        canvas.height = height;
+
+        // Draw the image
+        ctx.drawImage(image, 0, 0, width, height);
+
+        // Add watermark text
+        ctx.font = "10px Poppins";
+        ctx.fillStyle = "rgba(204, 255, 255)";
+        ctx.textAlign = "right";
+        ctx.fillText("NNC ✨", width - 10, height - 10);
+
+        return canvas.toDataURL("image/png");
+      }
 
       surpriseButton.addEventListener("click", function () {
         const randomIndex = Math.floor(Math.random() * randomDescriptions.length);
@@ -489,55 +567,30 @@ const randomDescriptions = [
 
         const imageUrl = `https://image.pollinations.ai/prompt/${description}?nologo=1&seed=${randomSeed}&height=${height}&width=${width}`;
 
-        const image = new Image();
-        image.crossOrigin = "anonymous"; // Ensure the image can be used in canvas
-        image.onload = function () {
-          loadingSpinner.style.display = "none";
+        // Placeholder image (with watermark)
+        const previewImage = new Image();
+        previewImage.crossOrigin = "anonymous";
+        previewImage.onload = function () {
+          const previewImageDataUrl = addWatermarkToImage(previewImage, width, height);
+          const watermarkImage = new Image();
+          watermarkImage.src = previewImageDataUrl;
+          imageContainer.innerHTML = "";
+          imageContainer.appendChild(watermarkImage);
+
           genText.style.display = "block";
           downloadButton.style.display = "inline-block";
+          downloadButton.href = previewImageDataUrl;
+          downloadButton.download = "generated-image.png";
 
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-          canvas.width = width;
-          canvas.height = height;
-
-          // Draw the image
-          ctx.drawImage(image, 0, 0, width, height);
-
-          // Add watermark
-          ctx.font = "20px Poppins";
-          ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-          ctx.textAlign = "right";
-          ctx.fillText("NNC", width - 10, height - 10);
-
-          // Set download link
-          downloadButton.href = canvas.toDataURL("image/png");
-
-          imageContainer.innerHTML = "";
-          imageContainer.appendChild(image);
-          generateButton.disabled = false;
-        };
-
-        image.onerror = function () {
           loadingSpinner.style.display = "none";
-          alert("Image generation failed. Please try again.");
           generateButton.disabled = false;
         };
-         // Placeholder image before the full-size image loads
-        const previewImage = document.createElement("img");
-        previewImage.src = `https://i.pinimg.com/originals/ba/a5/e3/baa5e3935ec0f3954c870670295c2b7e.gif`;
-        previewImage.alt = "Preview Image";
-        imageContainer.innerHTML = "";
-        imageContainer.appendChild(previewImage);
 
-        image.src = imageUrl;
+        previewImage.src = imageUrl;
       });
+
     });
   </script>
-
-  <footer>
-    <p>✨ Powered by JavaScript | FROM NNC ✨</p>
-  </footer>
 </body>
 
 </html>
